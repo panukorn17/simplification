@@ -21,6 +21,8 @@ from __future__ import division
 from collections import Counter
 import sys
 import textstat
+import os
+
 
 
 
@@ -208,19 +210,19 @@ def evaluate_fres_score(simplified_sentence):
     return(fres_scores)
 
 def main():
-
+    path = os.getcwd()
     #clean
-    output_clean_1_4_4 = ReadInFile("./data/turkcorpus/clean_data/test_clean_1_4_4.txt")
-    norm_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.NORM")
-    simp_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.SIMP")
-    turk0_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.0")
-    turk1_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.1")
-    turk2_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.2")
-    turk3_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.3")
-    turk4_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.4")
-    turk5_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.5")
-    turk6_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.6")
-    turk7_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.7")
+    output_clean_1_4_4 = ReadInFile(path + "/data/turkcorpus/clean_data/test_clean_1_4_4.txt")
+    norm_clean = ReadInFile(path + "/data/turkcorpus/clean_data/test.8turkers.tok.clean.norm")
+    simp_clean = ReadInFile(path + "/data/turkcorpus/clean_data/test.8turkers.tok.clean.SIMP")
+    turk0_clean = ReadInFile(path + "/data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.0")
+    turk1_clean = ReadInFile(path + "/data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.1")
+    turk2_clean = ReadInFile(path + "/data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.2")
+    turk3_clean = ReadInFile(path + "/data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.3")
+    turk4_clean = ReadInFile(path + "/data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.4")
+    turk5_clean = ReadInFile(path + "/data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.5")
+    turk6_clean = ReadInFile(path + "/data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.6")
+    turk7_clean = ReadInFile(path + "/data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.7")
 
     SARI_scores_clean_1_4_4, SARI_avg_clean_1_4_4 = evaluate_all(norm_clean, turk0_clean, turk1_clean, turk2_clean, turk3_clean, turk4_clean, turk5_clean, turk6_clean, turk7_clean, simp_clean, output_clean_1_4_4)
     fres_scores_1_4_4 = evaluate_fres_score(output_clean_1_4_4)
