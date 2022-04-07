@@ -20,12 +20,17 @@
 from __future__ import division
 from collections import Counter
 import sys
+from readability import Readability
+import textstat
+import re
+import codecs
+import csv
 
 
 
 def ReadInFile (filename):
     
-    with open(filename) as f:
+    with open(filename, encoding="utf-8") as f:
         lines = f.readlines()
         lines = [x.strip() for x in lines]
     return lines
@@ -180,23 +185,51 @@ def SARIsent (ssent, csent, rsents) :
 
     return finalscore
 
+def evaluate_all(norm, turk0, turk1, turk2, turk3, turk4, turk5, turk6, turk7, simp, output):
+    SARI_scores = []
+    SARI_sum = 0
+    for i in range(len(norm)):
+        #Original sentence
+        ssent = norm[i]
+
+        #Reference sentences
+        rsents = [simp[i], turk0[i], turk1[i], turk2[i], turk3[i], turk4[i], turk5[i], turk6[i], turk7[i]]
+
+        #Generated sentence
+        csent = output[i]
+
+        #SARI score
+        SARI_score_curr = SARIsent(ssent, csent, rsents)
+        SARI_scores.append(SARI_score_curr)
+        #Add up scores
+        SARI_sum += SARI_score_curr
+
+    SARI_avg = SARI_sum/len(norm)
+    return(SARI_scores, SARI_avg)
+
+def evaluate_fres_score(simplified_sentence):
+    fres_scores = textstat.flesch_reading_ease(''.join(simplified_sentence))
+    return(fres_scores)
 
 def main():
 
-    fnamenorm   = "./turkcorpus/test.8turkers.tok.norm"
-    fnamesimp   = "./turkcorpus/test.8turkers.tok.simp"
-    fnameturk  = "./turkcorpus/test.8turkers.tok.turk."
+    #clean
+    output_clean_1_4_4 = ReadInFile("./data/turkcorpus/clean_data/test_clean_1_4_4.txt")
+    norm_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.NORM")
+    simp_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.SIMP")
+    turk0_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.0")
+    turk1_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.1")
+    turk2_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.2")
+    turk3_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.3")
+    turk4_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.4")
+    turk5_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.5")
+    turk6_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.6")
+    turk7_clean = ReadInFile("./data/turkcorpus/clean_data/test.8turkers.tok.clean.turk.7")
 
-
-    ssent = "About 95 species are currently accepted ."
-    csent1 = "About 95 you now get in ."
-    csent2 = "About 95 species are now agreed ."
-    csent3 = "About 95 species are currently agreed ."
-    rsents = ["About 95 species are currently known .", "About 95 species are now accepted .", "95 species are now accepted ."]
-
-    print(SARIsent(ssent, csent1, rsents))
-    print(SARIsent(ssent, csent2, rsents))
-    print(SARIsent(ssent, csent3, rsents))
+    SARI_scores_clean_1_4_4, SARI_avg_clean_1_4_4 = evaluate_all(norm_clean, turk0_clean, turk1_clean, turk2_clean, turk3_clean, turk4_clean, turk5_clean, turk6_clean, turk7_clean, simp_clean, output_clean_1_4_4)
+    fres_scores_1_4_4 = evaluate_fres_score(output_clean_1_4_4)
+    print("Average SARI Score:",SARI_avg_clean_1_4_4*100)
+    print("FRES Score:",fres_scores_1_4_4)
 
 
 if __name__ == '__main__':
