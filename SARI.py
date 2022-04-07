@@ -20,11 +20,7 @@
 from __future__ import division
 from collections import Counter
 import sys
-from readability import Readability
 import textstat
-import re
-import codecs
-import csv
 
 
 
